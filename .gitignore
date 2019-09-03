@@ -1,0 +1,7 @@
+.vs/
+packages/
+TestResults/
+MathsParser/bin/
+MathsParser/obj/
+MathsParser.Test/bin/
+MathsParser.Test/obj/
