@@ -1,52 +1,33 @@
-﻿using MathsParser.Interfaces;
-using System;
+﻿using System;
+using System.Linq;
 
 namespace MathsParser.Classes
 {
-    public class GetInput : IGetInput
+    public class GetInput
     {
-        public string ReadInput()
+        public static string ReadInput()
         {
             Console.Write("Please enter an expression: ");
-            
-            string input = Console.ReadLine();
-            input = "e" + input + "f"; //surround whole expression with brackets so it can be parsed by CalculateExpression()
-            return input;
+            return Console.ReadLine();
         }
 
-        public bool ValidateInput(string userInput)
+        public static bool ValidateInput(string userInput)
         {
-            bool isValid = false;
-            
-            foreach(char c in userInput)
-            {
-                if (!char.IsNumber(c))
-                {
-                    isValid = false; //presume each char is invalid until proved otherwise
-                    foreach (ReservedCharacters item in Enum.GetValues(typeof(ReservedCharacters)))
-                    {
-                        if (c.ToString().Equals(item.ToString()))
-                        {
-                            isValid = true;
-                            break;
-                        }
-                    }
+            if (userInput.Length < 3)
+                return false;
 
-                    if (!isValid)
-                    {
-                        Console.WriteLine("ERROR: Invalid expression");
-                        break;
-                    }
-                }  
-            }
+            if (userInput.Count(x => x == 'e') != userInput.Count(x => x == 'f'))
+                return false;
 
-            /*TODO: Validation
-             - Check expression has minimum characters
-             - Check muliple symbols not adjacent
-             - Check opening bracket has corresponding closing bracket*/
+            var ReservedCharsArray = Enum.GetNames(typeof(ReservedCharacters)).ToList();
+            var invalidChars = userInput.ToCharArray()
+                                        .Where(x => !ReservedCharsArray.Contains(x.ToString()) && !char.IsNumber(x))
+                                        .ToList();
 
-            return isValid;
-            
+            if (invalidChars.Count != 0)
+                return false;
+
+            return true;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MathsParser.Interfaces;
 using MathsParser.Classes;
 using System;
 
@@ -9,129 +8,157 @@ namespace MathsParser.Test
     public class MathsParserTest
     {
         [TestMethod]
-        public void Pass_Addition()
+        public void Addition()
         {
-            decimal result = 0;
-            string input = "2a3";
-
-            input = "e" + input + "f";
+            //Arrange
+            var input = "2a3";
             
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            Assert.AreEqual(result, 5);
+            //Assert
+            Assert.AreEqual(5, result);
         }
 
         [TestMethod]
-        public void Pass_Subtraction()
+        public void Subtraction()
         {
-            decimal result = 0;
-            string input = "5b2";
+            //Arrange
+            var input = "5b2";
 
-            input = "e" + input + "f";
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
-
-            Assert.AreEqual(result, 3);
+            //Assert
+            Assert.AreEqual(3, result);
         }
 
         [TestMethod]
-        public void Pass_InvalidCharacter()
+        public void InvalidCharacter()
         {
-            bool result = true;
-            IGetInput getInput = new GetInput();
-            result = getInput.ValidateInput("5x2");
+            //Arrange
+            var input = "5x2";
 
-            Assert.AreEqual(result, false);
+            //Act
+            var result = GetInput.ValidateInput(input);
+
+            //Assert
+            Assert.AreEqual(false, result);
         }
 
         [TestMethod]
-        public void Pass_SingleBrackets()
+        public void SingleBrackets()
         {
-            decimal result = 0;
-            string input = "2a1ae3a2fb1";
+            //Arrange
+            var input = "2a1ae3a2fb1";
 
-            input = "e" + input + "f";
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
-
-            Assert.AreEqual(result, 7);
+            //Assert
+            Assert.AreEqual(7, result);
         }
 
         [TestMethod]
-        public void Pass_NestedBrackets()
+        public void NestedBrackets()
         {
-            decimal result = 0;
-            string input = "3a2ce1a2ce3b1fb2f";
+            //Arrange
+            var input = "3a2ce1a2ce3b1fb2f";
 
-            input = "e" + input + "f";
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
-
-            Assert.AreEqual(result, 20);
+            //Assert
+            Assert.AreEqual(20, result);
         }
 
         [TestMethod]
-        public void Pass_DoubleBrackets()
+        public void DoubleBrackets()
         {
-            decimal result = 0;
-            string input = "3ae1a2fbe3a1fa2";
+            //Arrange
+            var input = "3ae1a2fbe3a1fa2";
 
-            input = "e" + input + "f";
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
-
-            Assert.AreEqual(result, 4);
+            //Assert
+            Assert.AreEqual(4, result);
         }
 
         [TestMethod]
-        public void Pass_NegativeTotal()
+        public void NegativeTotal()
         {
-            decimal result = 0;
-            string input = "3b5";
+            //Arrange
+            var input = "3b5";
 
-            input = "e" + input + "f";
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
-
-            Assert.AreEqual(result, -2);
+            //Assert
+            Assert.AreEqual(-2, result);
         }
 
         [TestMethod]
-        public void Pass_NegativeTotalInBracket()
+        public void NegativeTotalInBracket()
         {
-            decimal result = 0;
-            string input = "2ae3b8f";
+            //Arrange
+            var input = "2ae3b8f";
 
-            input = "e" + input + "f";
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
-
-            Assert.AreEqual(result, -3);
+            //Assert
+            Assert.AreEqual(-3, result);
         }
 
-        // TODO: Test waits for console.readline so never completes
         [TestMethod]
-        [Ignore]
-        [ExpectedException(typeof(DivideByZeroException), "ERROR: Division of 3 by 0.")]
-        public void CatchException_DivideBy0()
+        public void DivideBy0()
         {
-            decimal result = 0;
-            string input = "3d0";
+            //Arrange
+            var input = "3d0";
 
-            input = "e" + input + "f";
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
 
-            IParseMaths parseMaths = new ParseMaths();
-            result = parseMaths.CalculateExpression(input);
+            //Assert
+            Assert.AreEqual(0, result);
         }
 
-        //TODO: Test for decimals in expression
+        [TestMethod]
+        public void ExpressionIncludesDecimals()
+        {
+            //Arrange
+            var input = "3.1a2.3";
 
+            //Act
+            var result = ParseMaths.CalculateExpression(input);
+
+            //Assert
+            Assert.AreEqual(Convert.ToDecimal(5.4), result);
+        }
+
+        [TestMethod]
+        public void ExpressionTooShort()
+        {
+            //Arrange
+            var input = "5a";
+
+            //Act
+            var result = GetInput.ValidateInput(input);
+
+            //Assert
+            Assert.AreEqual(false, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception), "Invalid Expression")]
+        public void TwoMathematicalSymbolsNextToEachOther()
+        {
+            //Arrange
+            var input = "6cd2";
+
+            //Act
+            ParseMaths.CalculateExpression(input);
+        }
     }
 }
