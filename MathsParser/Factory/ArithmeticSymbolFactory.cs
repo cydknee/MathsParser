@@ -1,8 +1,12 @@
-﻿using MathsParser.Interfaces;
-using System;
+﻿using System;
 
 namespace MathsParser.Classes
 {
+    interface IArithmeticSymbolFactory
+    {
+        decimal DoSum(decimal leftValue, decimal rightValue);
+    }
+
     public abstract class ArithmeticSymbolFactory : IArithmeticSymbolFactory
     {
         public abstract decimal DoSum(decimal leftValue, decimal rightValue);
@@ -14,7 +18,6 @@ namespace MathsParser.Classes
         {
             return leftValue + rightValue;
         }
-
     }
 
     public class Subtraction : ArithmeticSymbolFactory
@@ -45,8 +48,6 @@ namespace MathsParser.Classes
             {
                 Console.WriteLine("ERROR: Division of {0} by 0.", leftValue);
                 Console.WriteLine("Press enter key to exit application");
-                Console.ReadLine();
-                Environment.Exit(0);
                 return 0;
             }
         }
@@ -67,7 +68,7 @@ namespace MathsParser.Classes
                 case "d":
                     return new Division();
                 default:
-                    return new Addition();
+                    throw new Exception("Invalid Expression");
             }
         }
     }
